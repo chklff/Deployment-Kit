@@ -8,10 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Integration {
+  id          Int      @id @default(autoincrement())
+  name        String
+  templateId  Int
+  imageUrl    String   // URL to the image for the integration
+  description String   // Short description of what the integration does
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
 model User {
   id        Int     @id @default(autoincrement())
   userId    String  @unique
-  teamId    String?
+  teamId    Int
   flows     Flow[]  @relation("UserFlows")
 
   @@map("users")

@@ -1,14 +1,15 @@
+// src/utils/makeApi.js
 import axios from 'axios';
 
 const makeApi = axios.create({
-  baseURL: process.env.MAKE_BASE_URL,
+  baseURL: `${process.env.MAKE_BASE_URL}${process.env.MAKE_API_VERSION}`,
   headers: {
     Authorization: `Token ${process.env.MAKE_API_KEY}`,
   },
 });
 
-export async function createTeam(name) {
-  const response = await makeApi.post('/teams', { name });
+export async function createTeam(name, organizationId) {
+  const response = await makeApi.post('/teams', { name, organizationId });
   return response.data;
 }
 

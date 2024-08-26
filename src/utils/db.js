@@ -1,3 +1,5 @@
+// src/utils/db.js
+
 import { PrismaClient } from '@prisma/client';
 
 let prisma;

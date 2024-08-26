@@ -1,3 +1,5 @@
+//src/app.js
+
 import express from 'express';
 import getTemplates from './api/templates.js';
 import initiateFlowHandler from './api/initiate-flow.js';
