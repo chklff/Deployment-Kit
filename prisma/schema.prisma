@@ -31,7 +31,7 @@ model User {
 model Flow {
   id          Int      @id @default(autoincrement())
   flowId      String   @unique
-  templateId  String
+  templateId  Int
   userId      Int
   publicUrl   String
   status      String

@@ -60,7 +60,7 @@ export default async function getTemplates(req, res) {
 
   // Fetch all records from the Integration table
   const integrations = await prisma.integration.findMany();
-  console.log(`Found integrations: ${JSON.stringify(integrations)}`);
+  console.log(`Found integrations: ${JSON.stringify(integrations, null, 2)}`);
 
   res.status(200).json(integrations);
 }
