@@ -35,13 +35,18 @@ makeApi.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-// Your API functions
+// Make API functions
+
+// Function to create a team in Make API
 export async function createTeam(name, organizationId) {
   const response = await makeApi.post('/teams', { name, organizationId });
   return response.data;
 }
 
-export async function initiateFlow(templateId, teamId, redirectUri) {
+const redirectUri = `${process.env.APPLICATION_URL}/callback`;
+
+// Function to initiate a flow in Make API
+export async function initiateFlow(templateId, teamId) {
   const response = await makeApi.post('/instances/flow/init/template', {
     templateId,
     teamId,
@@ -50,12 +55,14 @@ export async function initiateFlow(templateId, teamId, redirectUri) {
   return response.data;
 }
 
+// Function to process a flow in Make API
 export async function processFlow(flowId) {
   const response = await makeApi.get(`/flows/${flowId}`);
   return response.data;
 }
 
+// Function to trigger a webhook
 export async function triggerWebhook(url, action) {
-  const response = await axios.post(url, { action });
+  const response = await makeApi.post(url, { action });
   return response.data;
 }

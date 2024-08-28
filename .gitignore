@@ -9,3 +9,5 @@
 #ignore vscode files
 .vscode
 
+/nocodb
+/config

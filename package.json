@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "start": "dotenv -e .env.production -- node src/app.js",  
+    "dev": "dotenv -e .env.development -- node start-dev.js"
   },
   "dependencies": {
     "@prisma/client": "^5.18.0",
     "axios": "^1.2.0",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "express": "^4.18.2",
+    "ngrok": "^5.0.0-beta.2",
     "prisma": "^5.0.0"
   },
   "devDependencies": {
