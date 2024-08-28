@@ -43,7 +43,7 @@ export async function createTeam(name, organizationId) {
   return response.data;
 }
 
-const redirectUri = `${process.env.APPLICATION_URL}/callback`;
+const redirectUri = `${process.env.APPLICATION_URL}/api/flow/callback`;
 
 // Function to initiate a flow in Make API
 export async function initiateFlow(templateId, teamId) {
@@ -57,7 +57,7 @@ export async function initiateFlow(templateId, teamId) {
 
 // Function to process a flow in Make API
 export async function processFlow(flowId) {
-  const response = await makeApi.get(`/flows/${flowId}`);
+  const response = await makeApi.get(`/instances/flow/${flowId}`);
   return response.data;
 }
 

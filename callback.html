@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing...</title>
+</head>
+<body>
+    <h1>Processing your request...</h1>
+    <script>
+        // Capture flowId from the URL
+        const params = new URLSearchParams(window.location.search);
+        const flowId = params.get('flowId');
+
+        // Make an API request to your backend
+        if (flowId) {
+            fetch(`/api/flow/callback?flowId=${flowId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'Flow completed') {
+                        document.body.innerHTML = '<h1>Flow Processed Successfully. You can close this window.</h1>';
+                        setTimeout(() => window.close(), 3000);
+                    } else {
+                        document.body.innerHTML = '<h1>Failed to Process Flow. Please try again later.</h1>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error processing callback:', error);
+                    document.body.innerHTML = '<h1>Error occurred. Please try again later.</h1>';
+                });
+        }
+    </script>
+</body>
+</html>
