@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 echo "Waiting for PostgreSQL to be ready..."
 until pg_isready -h postgres -p 5432 -U yourusername; do

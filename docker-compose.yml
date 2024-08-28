@@ -18,7 +18,7 @@ services:
     build: .
     environment:
       DATABASE_URL: "postgresql://yourusername:yourpassword@postgres:5432/prisma_db"
-      APP_MODE: "development"  # Or "production"
+      APP_MODE: "development"
     ports:
       - "3000:3000"
     depends_on:
@@ -34,13 +34,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      NC_DB: "pg://host.docker.internal:5432?u=yourusername&p=yourpassword&d=nocodb_db"
+      NC_DB: "pg://postgres:5432?u=yourusername&p=yourpassword&d=nocodb_db"
       #NC_AUTH_JWT_SECRET: "your-jwt-secret"
       NC_ADMIN_EMAIL: "admin@example.com"
-      NC_ADMIN_PASSWORD	: "adminpassword"
-      NC_USER_EMAIL: "admin@example.com" # This sets up the initial user
-      NC_USER_PASSWORD: "adminpassword"  # Password for the initial user
-      
+      NC_ADMIN_PASSWORD: "adminpassword"  # Ensure no tabs are here
+      NC_USER_EMAIL: "admin@example.com"  # This sets up the initial user
+      NC_USER_PASSWORD: "adminpassword"   # Password for the initial user
     depends_on:
       - postgres
     networks:

@@ -43,7 +43,7 @@ export async function createTeam(name, organizationId) {
   return response.data;
 }
 
-const redirectUri = `${process.env.APPLICATION_URL}/api/flow/callback`;
+const redirectUri = `http://${process.env.APPLICATION_URL}:${process.env.PORT}/api/flow/callback`;
 
 // Function to initiate a flow in Make API
 export async function initiateFlow(templateId, teamId) {
