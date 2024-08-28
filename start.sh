@@ -16,8 +16,8 @@ cat /app/db_tables.log
 # Check the environment variable APP_MODE
 if [ "$APP_MODE" = "development" ]; then
   echo "Starting the application in development mode"
-  npm run dev
+  node -r dotenv/config start-dev.js dotenv_config_path=.env.development
 else
   echo "Starting the application in production mode"
-  npm start
+  node -r dotenv/config src/app.js dotenv_config_path=.env.production
 fi

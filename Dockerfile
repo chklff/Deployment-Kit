@@ -1,10 +1,9 @@
 # Use the official Node.js image
-FROM node:22-alpine
+FROM node:22-slim
 
 # Install PostgreSQL client tools and necessary build tools
-RUN apk add --no-cache postgresql-client
+RUN apt-get update && apt-get install -y postgresql-client
 
-# Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
@@ -12,6 +11,9 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+
+# Install ngrok
+RUN npm install -g ngrok
 
 # Copy the rest of your application
 COPY . .

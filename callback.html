@@ -19,7 +19,7 @@
                 .then(data => {
                     if (data.status === 'Flow completed') {
                         document.body.innerHTML = '<h1>Flow Processed Successfully. You can close this window.</h1>';
-                        setTimeout(() => window.close(), 3000);
+                        setTimeout(() => window.close(), 3000); // Close window after 3 seconds
                     } else {
                         document.body.innerHTML = '<h1>Failed to Process Flow. Please try again later.</h1>';
                     }
@@ -28,6 +28,8 @@
                     console.error('Error processing callback:', error);
                     document.body.innerHTML = '<h1>Error occurred. Please try again later.</h1>';
                 });
+        } else {
+            document.body.innerHTML = '<h1>Invalid request. Flow ID is missing.</h1>';
         }
     </script>
 </body>
