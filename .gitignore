@@ -11,3 +11,5 @@
 
 /nocodb
 /config
+.env.development
+.env.production
