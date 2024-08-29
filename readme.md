@@ -73,6 +73,31 @@ networks:
 
 Use the following JSON schema to connect NocoDB to your PostgreSQL database:
 
+for local
+
+```json
+{
+  "title": "bridge",
+  "dataSource": {
+    "client": "pg",
+    "connection": {
+      "host": "postgres",
+      "port": 5432,
+      "user": "yourusername",
+      "password": "yourpassword",
+      "database": "prisma_db"
+    },
+    "searchPath": [
+      "public"
+    ]
+  },
+  "sslUse": "No",
+  "extraParameters": [],
+  "is_private": false
+}
+```
+
+for ubuntu server
 ```json
 {
   "title": "bridge",
