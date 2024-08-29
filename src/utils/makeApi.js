@@ -66,3 +66,20 @@ export async function triggerWebhook(url, action) {
   const response = await makeApi.post(url, { action });
   return response.data;
 }
+
+export async function getTeamTemplates(teamId) {
+  // Use masterTeam if defined, otherwise use the passed teamId
+  const finalTeamId = process.env.MASTER_MAKE_TEAM || teamId;
+
+  try {
+    const response = await makeApi.get('/templates/v2/instanceable', {
+      params: {
+        teamId: finalTeamId,
+      },
+    });
+    return response.data.templates;  // Return the templates array
+  } catch (error) {
+    console.error('Error fetching templates:', error);
+    throw error;
+  }
+}

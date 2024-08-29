@@ -12,6 +12,7 @@ model Integration {
   id          Int      @id @default(autoincrement())
   name        String
   templateId  Int
+  versionId   Int
   imageUrl    String   // URL to the image for the integration
   description String   // Short description of what the integration does
   createdAt   DateTime @default(now())
