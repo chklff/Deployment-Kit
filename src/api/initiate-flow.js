@@ -3,7 +3,7 @@ import prisma from '../utils/db.js';
 import { initiateFlow } from '../utils/makeApi.js';
 
 export default async function initiateFlowHandler(req, res) {
-  const { templateId, userId } = req.body;
+  const { templateId, versionId, userId } = req.body;
 
   try {
     const user = await prisma.user.findUnique({ where: { userId } });
@@ -13,12 +13,13 @@ export default async function initiateFlowHandler(req, res) {
 
     const { teamId } = user;
 
-    const flowData = await initiateFlow(templateId, teamId);
+    const flowData = await initiateFlow(versionId, teamId);
 
     const flow = await prisma.flow.create({
       data: {
         flowId: flowData.flow.id,
         templateId,
+        versionId,
         userId: user.id,
         publicUrl: flowData.publicUrl,
         status: 'initialized',

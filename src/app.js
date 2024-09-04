@@ -43,17 +43,21 @@ app.get('/templates', async (req, res) => {
         <body class="bg-gray-100">
           <div class="w-full flex justify-center items-center flex-wrap p-4">
             ${integrations.map(integration => `
-              <div key="${integration.id}" class="m-4" style="width: 14rem;">
+              <div class="m-4" style="width: 14rem;">
                 <div 
                   class="flex flex-col items-center justify-center p-6 mx-auto bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer"
-                  onclick="initiateFlow(${integration.versionId})"
+                  onclick="initiateFlow(${integration.versionId}, ${integration.templateId})"
                 >
                   <img src="${integration.imageUrl}" alt="${integration.name}" width="96" height="96" class="mb-3" />
                   <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 text-center">${integration.name}</h5>
                   <p class="font-normal text-gray-700 text-center">${integration.description}</p>
                   <div class="flex items-center mt-2" onclick="event.stopPropagation();">
                     <span class="mr-2 text-gray-700">${integration.isActive ? 'Active' : 'Inactive'}</span>
-                    <input type="checkbox" ${integration.isActive ? 'checked' : ''} onclick="handleToggle(event, ${integration.versionId})" />
+                    <input 
+                      type="checkbox" 
+                      ${integration.isActive ? 'checked' : ''} 
+                      onclick="handleToggle(event, ${integration.versionId})" 
+                    />
                   </div>
                 </div>
               </div>
@@ -61,7 +65,9 @@ app.get('/templates', async (req, res) => {
           </div>
   
           <script>
-            async function initiateFlow(versionId) {
+            // Function to initiate flow when clicking on a tile
+            async function initiateFlow(versionId, templateId) {
+              console.log('Initiating flow with versionId:', versionId, 'templateId:', templateId);
               try {
                 const response = await fetch('/api/flow/initiate', {
                   method: 'POST',
@@ -69,8 +75,9 @@ app.get('/templates', async (req, res) => {
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({
-                    templateId: versionId,
-                    userId: 'user-333'
+                    templateId: templateId,
+                    userId: 'user-334',
+                    versionId: versionId
                   })
                 });
   
@@ -90,6 +97,7 @@ app.get('/templates', async (req, res) => {
               }
             }
   
+            // Function to handle checkbox toggle
             function handleToggle(event, versionId) {
               const isChecked = event.target.checked;
               alert('Toggled version ID: ' + versionId + ' to ' + (isChecked ? 'Active' : 'Inactive'));
@@ -100,6 +108,7 @@ app.get('/templates', async (req, res) => {
       </html>
     `;
   }
+  
   
   
 
