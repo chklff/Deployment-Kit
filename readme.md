@@ -73,7 +73,7 @@ networks:
 
 Use the following JSON schema to connect NocoDB to your PostgreSQL database:
 
-for local
+for remote ubuntu local
 
 ```json
 {
@@ -97,7 +97,7 @@ for local
 }
 ```
 
-for ubuntu server
+for local server
 ```json
 {
   "title": "bridge",

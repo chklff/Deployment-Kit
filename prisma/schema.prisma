@@ -19,12 +19,12 @@ model Integration {
   updatedAt   DateTime @updatedAt
 }
 
-
 model User {
-  id        Int     @id @default(autoincrement())
-  userId    String  @unique
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
   teamId    Int
-  flows     Flow[]  @relation("UserFlows")
+  flows     Flow[]   @relation("UserFlows")
+  webhooks  Webhook[] @relation("UserWebhooks")  // A user can have many webhooks
 
   @@map("users")
 }
@@ -33,25 +33,41 @@ model Flow {
   id          Int      @id @default(autoincrement())
   flowId      String   @unique
   templateId  Int
+  versionId   Int
   userId      Int
   publicUrl   String
   status      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  webhook     Webhook? @relation("FlowWebhook")
+  webhooks    Webhook[] @relation("FlowWebhook") // Flow can have multiple Webhooks
   user        User     @relation("UserFlows", fields: [userId], references: [id])
 
   @@map("flows")
 }
 
+model Action {
+  id             Int      @id @default(autoincrement())
+  actionName     String   @unique
+  templateId     Int
+  versionId      Int
+  dataSpec       Json     // JSON object to store the expected structure of the data
+  webhooks       Webhook[] @relation("ActionWebhooks")  // Actions related to webhooks
+
+  @@map("actions")
+}
+
 model Webhook {
   id           Int      @id @default(autoincrement())
-  flowId       Int      @unique
+  flowId       Int
+  actionId     Int
+  userId       Int      // Webhooks are specific to a user
   url          String
   scenarioId   String
   integrationId String
   isActive     Boolean  @default(true)
   flow         Flow     @relation("FlowWebhook", fields: [flowId], references: [id])
+  action       Action   @relation("ActionWebhooks", fields: [actionId], references: [id])
+  user         User     @relation("UserWebhooks", fields: [userId], references: [id])  // Webhook belongs to a specific user
 
   @@map("webhooks")
 }
