@@ -12,9 +12,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Install ngrok
-RUN npm install -g ngrok
-
 # Copy the rest of your application
 COPY . .
 

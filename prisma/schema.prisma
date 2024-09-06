@@ -11,36 +11,44 @@ datasource db {
 model Integration {
   id          Int      @id @default(autoincrement())
   name        String
-  templateId  Int
+  templateId  Int      @unique
   versionId   Int
   imageUrl    String   // URL to the image for the integration
   description String   // Short description of what the integration does
+  hookId      String?  // Optional hookId property
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  scenarios   Scenario[]  @relation("IntegrationScenarios")  // An integration can have many scenarios
+
+  @@map("integrations")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  userId    String   @unique
-  teamId    Int
-  flows     Flow[]   @relation("UserFlows")
-  webhooks  Webhook[] @relation("UserWebhooks")  // A user can have many webhooks
+  id         Int         @id @default(autoincrement())
+  userId     String      @unique
+  teamId     Int?
+  flows      Flow[]      @relation("UserFlows")
+  webhooks   Webhook[]   @relation("UserWebhooks")  // A user can have many webhooks
+  scenarios  Scenario[]  @relation("UserScenarios") // A user can be linked to many scenarios
 
   @@map("users")
 }
 
 model Flow {
-  id          Int      @id @default(autoincrement())
-  flowId      String   @unique
+  id          Int        @id @default(autoincrement())
+  flowId      String     @unique
   templateId  Int
   versionId   Int
   userId      Int
   publicUrl   String
   status      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  webhooks    Webhook[] @relation("FlowWebhook") // Flow can have multiple Webhooks
-  user        User     @relation("UserFlows", fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  webhooks    Webhook[]  @relation("FlowWebhook")  // A flow can have multiple webhooks
+  user        User       @relation("UserFlows", fields: [userId], references: [id])
+  scenarios   Scenario[] @relation("FlowScenarios")  // A flow can be linked to many scenarios
 
   @@map("flows")
 }
@@ -50,24 +58,50 @@ model Action {
   actionName     String   @unique
   templateId     Int
   versionId      Int
-  dataSpec       Json     // JSON object to store the expected structure of the data
-  webhooks       Webhook[] @relation("ActionWebhooks")  // Actions related to webhooks
+  dataSpec       Json        // JSON object to store the expected structure of the data
+  webhooks       Webhook[]   @relation("ActionWebhooks")  // Actions related to webhooks
 
   @@map("actions")
 }
 
 model Webhook {
-  id           Int      @id @default(autoincrement())
-  flowId       Int
-  actionId     Int
-  userId       Int      // Webhooks are specific to a user
-  url          String
-  scenarioId   String
-  integrationId String
-  isActive     Boolean  @default(true)
-  flow         Flow     @relation("FlowWebhook", fields: [flowId], references: [id])
-  action       Action   @relation("ActionWebhooks", fields: [actionId], references: [id])
-  user         User     @relation("UserWebhooks", fields: [userId], references: [id])  // Webhook belongs to a specific user
+  id           Int        @id @default(autoincrement())
+  flowId       Int?
+  actionId     Int?
+  userId       Int?
+  url          String?    // Nullable, since the webhook URL might not be available
+  scenarioId   Int?
+  webhookId    Int?       // Nullable because sometimes a webhook might not be returned
+  isActive     Boolean    @default(true)
+
+  flow         Flow?      @relation("FlowWebhook", fields: [flowId], references: [id])
+  action       Action?    @relation("ActionWebhooks", fields: [actionId], references: [id])
+  user         User?      @relation("UserWebhooks", fields: [userId], references: [id])  // Webhook belongs to a specific user
+  scenario     Scenario?  @relation("ScenarioWebhooks", fields: [scenarioId], references: [id])  // Webhook can belong to a scenario
 
   @@map("webhooks")
+}
+
+model Scenario {
+  id           Int        @id @default(autoincrement())
+  scenarioId   Int        @unique  // Mark scenarioId as unique
+  name         String     // Name of the scenario
+  templateId   Int?       // Optional reference to the template (Integration)
+  versionId    Int?       // Optional version of the template
+  status       String     // Status of the scenario (e.g., 'running', 'completed', 'failed')
+  errors       Json?      // Errors related to the scenario (optional, stored as JSON)
+  url          String     // URL
+  teamId       Int        // Make Team ID
+  flowId       Int?       // Optional reference to the flow
+  userId       Int?       // Optional reference to the user
+  createdAt    DateTime   @default(now())  // Timestamp when the scenario was created
+  updatedAt    DateTime   @updatedAt       // Automatically update timestamp when the record is updated
+
+  // Relations
+  user         User?      @relation("UserScenarios", fields: [userId], references: [id])
+  flow         Flow?      @relation("FlowScenarios", fields: [flowId], references: [id])
+  integration  Integration? @relation("IntegrationScenarios", fields: [templateId], references: [templateId])
+  webhooks     Webhook[]  @relation("ScenarioWebhooks")
+
+  @@map("scenarios")
 }

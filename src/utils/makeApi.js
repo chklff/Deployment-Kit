@@ -46,11 +46,19 @@ export async function createTeam(name, organizationId) {
 const redirectUri = `http://${process.env.APPLICATION_URL}:${process.env.PORT}/api/flow/callback`;
 
 // Function to initiate a flow in Make API
-export async function initiateFlow(templateId, teamId) {
+export async function initiateFlow(templateId, teamId, prefill) {
   const response = await makeApi.post('/instances/flow/init/template', {
     templateId,
     teamId,
     redirectUri,
+    prefill,
+    scenario: {
+      enable: true
+    },
+    autoActivate: true,
+    autoFinalize: true,
+    allowReusingComponents: false,
+    allowCreatingComponents: true,
   });
   return response.data;
 }
@@ -67,6 +75,12 @@ export async function triggerWebhook(url, action) {
   return response.data;
 }
 
+export async function getWebhook(hookId) {
+  const response = await makeApi.get(`/hooks/${hookId}`);
+  return response.data;
+}
+
+
 export async function getTeamTemplates(teamId) {
   // Use masterTeam if defined, otherwise use the passed teamId
   const finalTeamId = process.env.MASTER_MAKE_TEAM || teamId;
@@ -82,4 +96,44 @@ export async function getTeamTemplates(teamId) {
     console.error('Error fetching templates:', error);
     throw error;
   }
+}
+
+export async function createWebhook(data) {
+  const response = await makeApi.post('/hooks', data);
+  return response.data;
+}
+
+
+
+export async function getOrgScenarios(organizationId) {
+  let offset = 0;
+  let results = [];
+
+  while (true) {
+    const pagination = {
+      pg: {
+        limit: 50,
+        offset,
+        sortBy: 'id',
+        sortDir: 'asc',
+      },
+    };
+
+    const response = await makeApi.get('/scenarios', { params: { organizationId, ...pagination } });
+    const data = response.data;
+
+    if (data && data.scenarios) {
+      results = results.concat(data.scenarios);
+    }
+
+    // Check if we have reached the end based on the `pg` object
+    if (data.pg && data.pg.limit > data.scenarios.length) {
+      break;
+    }
+
+    // Increment the offset for the next page of data
+    offset += 50;
+  }
+
+  return results;
 }
