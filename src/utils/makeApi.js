@@ -103,7 +103,10 @@ export async function createWebhook(data) {
   return response.data;
 }
 
-
+export async function getScenario(id) {
+  const response = await makeApi.get(`/scenarios/${id}`);  // Use GET and remove 'data'
+  return response.data;
+}
 
 export async function getOrgScenarios(organizationId) {
   let offset = 0;

@@ -2,7 +2,7 @@
 FROM node:22-slim
 
 # Install PostgreSQL client tools and necessary build tools
-RUN apt-get update && apt-get install -y postgresql-client
+RUN apt-get update && apt-get install -y postgresql-client curl jq
 
 WORKDIR /app
 

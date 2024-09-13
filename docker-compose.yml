@@ -35,7 +35,6 @@ services:
       - "8080:8080"
     environment:
       NC_DB: "pg://postgres:5432?u=yourusername&p=yourpassword&d=nocodb_db"
-      #NC_AUTH_JWT_SECRET: "your-jwt-secret"
       NC_ADMIN_EMAIL: "admin@example.com"
       NC_ADMIN_PASSWORD: "adminpassword"  # Ensure no tabs are here
       NC_USER_EMAIL: "admin@example.com"  # This sets up the initial user
