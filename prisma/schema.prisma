@@ -20,6 +20,7 @@ model Integration {
   updatedAt   DateTime @updatedAt
 
   scenarios   Scenario[]  @relation("IntegrationScenarios")  // An integration can have many scenarios
+  actions     Action[]   @relation("ActionIntegrations")
 
   @@map("integrations")
 }
@@ -60,6 +61,7 @@ model Action {
   versionId      Int
   dataSpec       Json        // JSON object to store the expected structure of the data
   webhooks       Webhook[]   @relation("ActionWebhooks")  // Actions related to webhooks
+  integrations   Integration[] @relation("ActionIntegrations")
 
   @@map("actions")
 }
@@ -70,14 +72,14 @@ model Webhook {
   actionId     Int?
   userId       Int?
   url          String?    // Nullable, since the webhook URL might not be available
-  scenarioId   Int?
+  scenarioId   Int?        @unique // Ensure that scenarioId is unique for a one-to-one relation
   webhookId    Int?       // Nullable because sometimes a webhook might not be returned
   isActive     Boolean    @default(true)
 
   flow         Flow?      @relation("FlowWebhook", fields: [flowId], references: [id])
   action       Action?    @relation("ActionWebhooks", fields: [actionId], references: [id])
-  user         User?      @relation("UserWebhooks", fields: [userId], references: [id])  // Webhook belongs to a specific user
-  scenario     Scenario?  @relation("ScenarioWebhooks", fields: [scenarioId], references: [id])  // Webhook can belong to a scenario
+  user         User?      @relation("UserWebhooks", fields: [userId], references: [id])  
+  scenario     Scenario?   @relation("ScenarioWebhook", fields: [scenarioId], references: [id])  // Webhook must have a Scenario
 
   @@map("webhooks")
 }
@@ -85,7 +87,7 @@ model Webhook {
 model Scenario {
   id           Int        @id @default(autoincrement())
   scenarioId   Int        @unique  // Mark scenarioId as unique
-  name         String     // Name of the scenario
+  name         String?    // Name of the scenario
   templateId   Int?       // Optional reference to the template (Integration)
   versionId    Int?       // Optional version of the template
   status       String     // Status of the scenario (e.g., 'running', 'completed', 'failed')
@@ -97,11 +99,10 @@ model Scenario {
   createdAt    DateTime   @default(now())  // Timestamp when the scenario was created
   updatedAt    DateTime   @updatedAt       // Automatically update timestamp when the record is updated
 
-  // Relations
   user         User?      @relation("UserScenarios", fields: [userId], references: [id])
   flow         Flow?      @relation("FlowScenarios", fields: [flowId], references: [id])
   integration  Integration? @relation("IntegrationScenarios", fields: [templateId], references: [templateId])
-  webhooks     Webhook[]  @relation("ScenarioWebhooks")
+  webhook      Webhook?   @relation("ScenarioWebhook")  // Scenario can optionally have a Webhook
 
   @@map("scenarios")
 }
