@@ -1,0 +1,57 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Integration {
+  id          Int      @id @default(autoincrement())
+  name        String
+  templateId  Int
+  versionId   Int
+  imageUrl    String   // URL to the image for the integration
+  description String   // Short description of what the integration does
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
+model User {
+  id        Int     @id @default(autoincrement())
+  userId    String  @unique
+  teamId    Int
+  flows     Flow[]  @relation("UserFlows")
+
+  @@map("users")
+}
+
+model Flow {
+  id          Int      @id @default(autoincrement())
+  flowId      String   @unique
+  templateId  Int
+  userId      Int
+  publicUrl   String
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  webhook     Webhook? @relation("FlowWebhook")
+  user        User     @relation("UserFlows", fields: [userId], references: [id])
+
+  @@map("flows")
+}
+
+model Webhook {
+  id           Int      @id @default(autoincrement())
+  flowId       Int      @unique
+  url          String
+  scenarioId   String
+  integrationId String
+  isActive     Boolean  @default(true)
+  flow         Flow     @relation("FlowWebhook", fields: [flowId], references: [id])
+
+  @@map("webhooks")
+}
