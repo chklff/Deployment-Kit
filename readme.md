@@ -166,6 +166,14 @@ curl -X GET "http://APPLICATION_URL:3000/api/templates?userId=user-333" \
   -H "Content-Type: application/json"
 ```
 
+### 3. Access Links
+
+Access NocoDB: 
+APPLICATION_URL:8080/
+
+Templates page:
+APPLICATION_URL:3000/templates
+
 ## Contributing
 
 Feel free to submit issues or pull requests if you find any bugs or have suggestions for improvements.
