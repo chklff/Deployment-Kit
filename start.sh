@@ -60,7 +60,7 @@ PROJECT_RESPONSE=$(curl --location "http://nocodb:8080/api/v1/db/meta/projects/"
 --header "xc-token: $TOKEN" \
 --header "Content-Type: application/json" \
 --data '{
-    "title": "YESSSS 777",
+    "title": "Bridge",
     "meta": "{\"iconColor\":\"#7D26CD\"}"
 }')
 
@@ -106,7 +106,7 @@ curl --location "http://nocodb:8080/api/v1/db/meta/projects/$PROJECT_ID/bases/" 
 --header "Content-Type: application/json" \
 --data "{
     \"fk_integration_id\": \"$INTEGRATION_ID\",
-    \"alias\": \"Testbebebe\",
+    \"alias\": \"BridgeDB\",
     \"config\": {
         \"connection\": {
             \"client\": \"pg\",
