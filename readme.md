@@ -149,39 +149,22 @@ MAKE_BASE_URL=https://eu2.make.com
 MAKE_API_VERSION=/api/v2
 MAKE_API_KEY=xxxx
 MAKE_ORG_ID=xxxx
+MASTER_MAKE_TEAM=xxxxx
 APP_MODE=development
 APP_BASE_URL=http://localhost:3000
+APPLICATION_URL=xxx.xxx.xxx.xxx
+PORT=3000
+DEBUG_COLORS=true
 DEBUG=*
 ```
+### 2. Start with pulling data from Make
 
-### 2. Using Ngrok for Local Development
+userId - is any alphanumerical that may match your user ID, that will try to find users in app data base and if not exist going to create a New team in Make and in parallel will sync all info from Master team to app DBs
 
-During development, Ngrok is used to expose your local server to the internet. This is especially useful when testing integrations that require a public URL.
-
-### 3. Start Ngrok and Your App
-
-You can use the `start-dev.js` script to start both Ngrok and your application. The script will update your environment file with the Ngrok URL.
-
-Example command:
-
-```bash
-npm run dev
 ```
-
-This will:
-- Start Ngrok on the specified port.
-- Update the `.env.development` file with the Ngrok URL.
-- Start the application using Nodemon.
-
-### 4. Accessing the Ngrok URL
-
-To see the Ngrok URL:
-
-```bash
-echo $APPLICATION_URL
+curl -X GET "http://APPLICATION_URL:3000/api/templates?userId=user-333" \
+  -H "Content-Type: application/json"
 ```
-
-This will output the current Ngrok URL used in your development environment.
 
 ## Contributing
 
